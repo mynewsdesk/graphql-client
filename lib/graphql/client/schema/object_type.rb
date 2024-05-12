@@ -53,10 +53,13 @@ module GraphQL
             @definition = definition
             @spreads = spreads unless spreads.empty?
 
-            @defined_fields.keys.each do |attr|
-              name = ActiveSupport::Inflector.underscore(attr)
-              @klass::READERS[:"#{name}"] ||= attr
-              @klass::PREDICATES[:"#{name}?"] ||= attr
+            @defined_fields.keys.each do |name|
+              @klass::READERS[:"#{name}"] ||= name
+              @klass::PREDICATES[:"#{name}?"] ||= name
+
+              underscored_name = ActiveSupport::Inflector.underscore(name)
+              @klass::READERS[:"#{underscored_name}"] ||= name
+              @klass::PREDICATES[:"#{underscored_name}?"] ||= name
             end
           end
 
